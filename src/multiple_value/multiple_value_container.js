@@ -6,11 +6,11 @@ import SSF from "ssf";
 
 const baseOptions = {
   font_size_main: {
-    label: "Font Size",
+    label: "Font Sizes",
     type: 'string',
     section: 'Style',
     default: "",
-    order: 0,
+    order: 4,
     display_size: 'normal'
   },
   orientation: {
@@ -24,7 +24,7 @@ const baseOptions = {
       {'Horizontal': 'horizontal'}
     ],
     default: 'auto',
-    order: 0,
+    order: 3,
     display_size: 'normal'
   },
   header_background : {
@@ -33,22 +33,23 @@ const baseOptions = {
     display: `color`,
     default: '#FFFFFF',
     section: 'Style',
-    order: 0
+    order: 2
   },
-  header_text_color : {
+
+  subtext_color : {
     type: `string`,
-    label: `Header Text Color`,
+    label: `Subtext Color`,
     display: `color`,
-    default: '#000000',
+    default: '#6B6B6B',
     section: 'Style',
-    order: 0
+    order: 1
   },
   header_text_size : {
     type: `string`,
     label: `Header Text Size`,
     default: "",
     section: 'Style',
-    order: 0,
+    order: 5,
     display_size: 'normal'
 
   }

@@ -11,7 +11,8 @@ const DataPointsWrapper = styled.div`
   align-items: center;
   margin: 10px;
   height: 100%;
-  background-color: ${props => props.headerBackground};
+  border-left: 15px solid ${props => props.headerBackground};
+  border-radius: 14px;
 `
 
 const dataPointGroupDirectionDict = {
@@ -23,7 +24,8 @@ const dataPointGroupDirectionDict = {
 
 const DataPointGroup = styled.div`
   margin: 20px 5px;
-  text-align: center;
+  text-align: left;
+  padding-left:10%
   width: 100%;
   display: flex;
   flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
@@ -52,17 +54,19 @@ const DataPoint = styled.div`
 `
 
 const DataPointTitle = styled.div`
-  font-weight: bolder;
-  font-size: 38px;
+  font-weight: bold;
+  font-size: 30px;
   margin: 5px 0;
+  color: #01535E
 `
 
 const DataPointValue = styled.div`
-  font-size: 3em;
-  font-weight: 100;
+  font-size: 50px;
+  font-weight: bolder;
   :hover {
     text-decoration: underline;
   }
+  color: ${props => props.color}
 `
 
 class MultipleValue extends React.PureComponent {
@@ -110,9 +114,6 @@ class MultipleValue extends React.PureComponent {
     const groupingLayout = window.innerWidth >= 768 ? 'horizontal' : 'vertical';
 
     let CONFIG = this.props.config;
-
-    console.log(CONFIG.font_size_main);
-
     var font_size = (CONFIG.font_size_main != "" ? CONFIG.font_size_main : this.calculateFontSize());
     font_size = font_size / EM;
 
@@ -128,13 +129,14 @@ class MultipleValue extends React.PureComponent {
     let CONFIG = this.props.config;
     let firstPoint = data[0];
     let restPoints = data.slice(1)
-    console.log(config[`comparison_direction_${firstPoint.name}`])
+    console.table(data)
+    console.table(config)
     return (
       <DataPointsWrapper
         layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
-        headerBackground = {config['header_background']}
+        headerBackground = {firstPoint.value > restPoints[0].value ? "#02545F" : "#F3C911"}
       >
               <>
               <DataPointGroup 
@@ -156,12 +158,14 @@ class MultipleValue extends React.PureComponent {
                   <DataPointValue 
                     onClick={() => { this.handleClick(firstPoint, event) }}
                     layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
+                    color = {config['subtext_color']}
                   >
                     {firstPoint.formattedValue}
                   </DataPointValue>
                 </DataPoint>
                 {!restPoints.length > 0 ? null : (
                   restPoints.map((point,index) => {
+                    if(!point.value){return ""}
                     let progressPerc
                     let percChange
                     progressPerc = Math.round((firstPoint.value / point.value) * 100)

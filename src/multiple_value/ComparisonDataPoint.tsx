@@ -1,18 +1,20 @@
 import React, { PureComponent, useState } from "react";
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 // @ts-ignore
 import {formatType, lighten} from '../common'
 import SSF from "ssf";
 
-let ComparisonDataPointGroup = styled.div`
+const ComparisonDataPointGroup = styled.div`
   flex: 1;
   width: 100%;
 
   margin: 10px 0;
   
-  font-size: 0.9em;
+  font-size: 20px;
+  color: ${props => props.color};
   font-weight: 100;
-  color: #a5a6a1;
+
 
   a.drillable-link {
     color: #a5a6a1;
@@ -30,6 +32,9 @@ const UpArrow = styled.div.attrs({
   border-bottom: 10px solid ${props =>
     props.pos ? 'red' : 'green'
   };
+  color: 10px solid ${props =>
+    props.pos ? 'green' : 'red'
+  };
   margin-right: 5px;
 `
 
@@ -44,11 +49,38 @@ const DownArrow = styled.div.attrs({
   border-top: 10px solid ${props =>
     props.pos ? 'green' : 'red'
   };
+  color: 10px solid ${props =>
+    props.pos ? 'green' : 'red'
+  };
   margin-right: 5px;
+
 `
+
+const UpText = styled.div.attrs({
+  pos: (props: any) => props.pos,
+})`
+  display: inline-block;
+  color: ${props =>
+    props.pos ? 'red' : 'green'
+  };
+
+`
+
+const DownText = styled.div.attrs({
+  pos: (props: any) => props.pos,
+})`
+  
+  color: ${props =>
+    props.pos ? 'green' : 'red'
+  };
+
+`
+
 const ComparisonPercentageChange = styled.div`
   display: inline-block;
   padding-right: 5px;
+  display:flex;
+  align-items:center;
   :hover {
     text-decoration: underline;
   }
@@ -125,20 +157,23 @@ export const ComparisonDataPoint: React.FC<{
       return defaultString
     }
   }
-
+  compDataPoint.label =  config[`comparison_label_${compDataPoint.name}`]
+  const pos = config[`pos_is_bad_${compDataPoint.name}`]
   return (
-    <ComparisonDataPointGroup>
+    <ComparisonDataPointGroup color = {config['subtext_color']}>
 
     {config[`comparison_style_${compDataPoint.name}`] !== 'percentage_change' ? null : (
       <ComparisonPercentageChange data-value={percChange} onClick={() => { handleClick(compDataPoint, event) }}>
-        {percChange >= 0 ? <UpArrow pos={config[`pos_is_bad_${compDataPoint.name}`]}/> : <DownArrow pos={config[`pos_is_bad_${compDataPoint.name}`]}/>}
-        {percChange >= 0 ? `+${percChange}` : percChange}%
+      <span> {config[`title_overrride_${dataPoint.name}`] || dataPoint.label} has gone &nbsp;  </span> 
+    {
+    percChange >= 0 ? [<UpArrow pos={pos} />, <UpText pos={pos}>{percChange}% </UpText>]: [<DownArrow pos={pos}/>,<DownText pos={pos}>{percChange}%</DownText>]}
+    <span>&nbsp;{compDataPoint.label}</span>
       </ComparisonPercentageChange>
     )}
 
     {config[`comparison_style_${compDataPoint.name}`] !== 'value' ? null : 
     <ComparisonSimpleValue onClick={() => { handleClick(compDataPoint, event) }}>
-      {config[`comp_value_format_${compDataPoint.name}`] === "" ? compDataPoint.formattedValue : tryFormatting(config[`comp_value_format_${compDataPoint.name}`], compDataPoint.value, compDataPoint.formattedValue)}
+    {config[`comp_value_format_${compDataPoint.name}`] === "" ? compDataPoint.formattedValue : tryFormatting(config[`comp_value_format_${compDataPoint.name}`], compDataPoint.value, compDataPoint.formattedValue)}
     </ComparisonSimpleValue>}
 
     {config[`comparison_style_${compDataPoint.name}`] !== 'calculate_progress' &&
@@ -157,7 +192,7 @@ export const ComparisonDataPoint: React.FC<{
             <ComparisonProgressBarLabel><div onClick={() => { handleClick(compDataPoint, event) }}>
               {config[`comparison_style_${compDataPoint.name}`] === 'calculate_progress' ? null :
                 <>
-                  {`${progressPerc}% of ${config[`comp_value_format_${compDataPoint.name}`] === "" ? compDataPoint.formattedValue : tryFormatting(config[`comp_value_format_${compDataPoint.name}`], compDataPoint.value, compDataPoint.formattedValue)} `}
+                  `${progressPerc} % of ${config[`comp_value_format_${compDataPoint.name}`] === "" ? compDataPoint.formattedValue : tryFormatting(config[`comp_value_format_${compDataPoint.name}`], compDataPoint.value, compDataPoint.formattedValue)}`
                 </>
               }
               {config[`comparison_label_${compDataPoint.name}`] || compDataPoint.label}
@@ -165,13 +200,6 @@ export const ComparisonDataPoint: React.FC<{
           )}
       </ComparisonProgressBar>
     )}
-
-    {(
-      config[`comparison_show_label_${compDataPoint.name}`] === false ||
-      config[`comparison_style_${compDataPoint.name}`] === 'calculate_progress' ||
-      config[`comparison_style_${compDataPoint.name}`] === 'calculate_progress_perc')
-    ? null 
-    : config[`comparison_label_${compDataPoint.name}`] || compDataPoint.label}
 
     </ComparisonDataPointGroup>
   )

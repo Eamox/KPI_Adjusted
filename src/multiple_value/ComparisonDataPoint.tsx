@@ -11,7 +11,7 @@ const ComparisonDataPointGroup = styled.div`
 
   margin: 10px 0;
   
-  font-size: 20px;
+  font-size: 16px;
   color: ${props => props.color};
   font-weight: 100;
 
@@ -157,7 +157,7 @@ export const ComparisonDataPoint: React.FC<{
       return defaultString
     }
   }
-  compDataPoint.label =  config[`comparison_label_${compDataPoint.name}`]
+  compDataPoint.label =  config[`comparison_label_${compDataPoint.name}`] || compDataPoint.label
   const pos = config[`pos_is_bad_${compDataPoint.name}`]
   return (
     <ComparisonDataPointGroup color = {config['subtext_color']}>

@@ -129,14 +129,15 @@ class MultipleValue extends React.PureComponent {
     let CONFIG = this.props.config;
     let firstPoint = data[0];
     let restPoints = data.slice(1)
-    console.table(data)
-    console.table(config)
+    let pos = config[`pos_is_bad_${restPoints[0].name}`]
+
+
     return (
       <DataPointsWrapper
         layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
-        headerBackground = {firstPoint.value > restPoints[0].value ? "#02545F" : "#F3C911"}
+        headerBackground = {((firstPoint.value - restPoints[0].value) * (pos * 2 - 1)) < 0 ? "#02545F" : "#F3C911"}
       >
               <>
               <DataPointGroup 

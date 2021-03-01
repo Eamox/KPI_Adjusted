@@ -97,15 +97,16 @@ looker.plugins.visualizations.add({
     }
 
     let firstRow = data[0];
-
+    console.log(data)
     const dataPoints = measures.map(measure => {
+      var point_value =  data.reduce((acc, curr) =>{return acc + curr[measure.name].value*1 },0)
       return ({
         name: measure.name,
         label: measure.label_short || measure.label,
-        value: firstRow[measure.name].value,
+        value: point_value,
         link: firstRow[measure.name].links,
         valueFormat: config[`value_format`],
-        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value)
+        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], point_value)
       })
     });
 
@@ -172,8 +173,6 @@ looker.plugins.visualizations.add({
             values: [
               {'Show as Value': 'value'},
               {'Show as Percentage Change': 'percentage_change'},
-              {'Calculate Progress': 'calculate_progress'},
-              {'Calculate Progress (with Percentage)': 'calculate_progress_perc'},
             ],
             section: 'Comparison',
             default: 'value',
@@ -259,7 +258,7 @@ looker.plugins.visualizations.add({
       }
       return fullValue;
     })
-
+    console.log(fullValues)
     this.chart = ReactDOM.render(
       <MultipleValue
         config={config}

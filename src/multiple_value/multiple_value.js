@@ -7,7 +7,7 @@ import { ComparisonDataPoint } from './ComparisonDataPoint'
 const DataPointsWrapper = styled.div`
   font-family: "Open Sans", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
   display: flex;
-  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'}!important;
   align-items: center;
   margin: 10px;
   height: 100%;

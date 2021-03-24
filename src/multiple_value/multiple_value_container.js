@@ -27,9 +27,9 @@ const baseOptions = {
     order: 3,
     display_size: 'normal'
   },
-  header_background : {
+  tile_background : {
     type: `string`,
-    label: `Header Background`,
+    label: `Tile Background`,
     display: `color`,
     default: '#FFFFFF',
     section: 'Style',

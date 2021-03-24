@@ -19,6 +19,7 @@ const DataPointsWrapper = styled.div`
   height: 100%;
   border-left: 15px solid ${props => props.borderColor};
   border-radius: 14px;
+  justify-content: center;
 `
 
 const dataPointGroupDirectionDict = {

@@ -257,7 +257,7 @@ looker.plugins.visualizations.add({
       }
       return fullValue;
     })
-    console.log(fullValues)
+  
     this.chart = ReactDOM.render(
       <MultipleValue
         config={config}

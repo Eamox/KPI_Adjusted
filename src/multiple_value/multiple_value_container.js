@@ -97,7 +97,6 @@ looker.plugins.visualizations.add({
     }
 
     let firstRow = data[0];
-    console.log(data)
     const dataPoints = measures.map(measure => {
       var point_value =  data.reduce((acc, curr) =>{return acc + curr[measure.name].value*1 },0)
       return ({

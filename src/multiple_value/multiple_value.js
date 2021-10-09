@@ -1,14 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import _ from 'lodash';
 import { createGlobalStyle } from 'styled-components';
-import {formatType, lighten} from '../common'
-import { ComparisonDataPoint } from './ComparisonDataPoint'
+import {formatType, lighten} from '../common';
+import { ComparisonDataPoint } from './ComparisonDataPoint';
 
 const GlobalStyle = createGlobalStyle`
 body {
   background-color: ${props => props.backgroundColor}
-}`
+}`;
 
 const DataPointsWrapper = styled.div`
   font-family: "Open Sans", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
@@ -35,8 +36,8 @@ const DataPointGroup = styled.div`
   padding-left:10%
   width: 100%;
   display: flex;
-  flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
-  flex-direction: ${props => props.comparisonPlacement ? dataPointGroupDirectionDict[props.comparisonPlacement] : 'column'};
+  flex-shrink:0;
+  flex-direction:column;
   align-items: center;
   justify-content: center;
 `
@@ -48,8 +49,8 @@ const Divider = styled.div`
 
 const DataPoint = styled.div`
   display: flex;
-  flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
-  flex-direction: ${props => props.titlePlacement === 'above' ? 'column' : 'column-reverse'};
+  flex-shrink: 0;
+  flex-direction: column;
   flex: 1;
   color: ${props => props.headerColor};
   font-size: ${props => props.headerSize}em;
@@ -80,7 +81,7 @@ class MultipleValue extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {}
+      this.state = {};
     this.state.groupingLayout = 'horizontal';
     this.state.fontSize = this.calculateFontSize();
   }
@@ -118,7 +119,7 @@ class MultipleValue extends React.PureComponent {
 
   recalculateSizing = () => {
     const EM = 16;
-    const groupingLayout = 'horizontal'
+      const groupingLayout = 'horizontal';
     let CONFIG = this.props.config;
     var font_size = (CONFIG.font_size_main != "" ? CONFIG.font_size_main : this.calculateFontSize());
     font_size = font_size / EM;
@@ -127,66 +128,77 @@ class MultipleValue extends React.PureComponent {
     this.setState({
       fontSize: font_size,
       groupingLayout
-    })
+    });
   }
 
-  render() {
-    const {config, data} = this.props;
-    let CONFIG = this.props.config;
-    let firstPoint = data[0];
-    let restPoints = data.slice(1)
-    let pos = config[`pos_is_bad_${restPoints[0].name}`]
+    determineRelative = (measure,dataPoints) => {
+	console.log(dataPoints);
+	var first = dataPoints[0];
+	var rest = dataPoints.slice(1);
+	console.log(rest);
+	var compPoints = _.compact([rest[0]||null,rest[11]||null]);
+	console.log(compPoints);
+	console.log(measure);
+	return compPoints.map((point,index) =>  {
+	    var fValue = first[measure.name].value;
+	    var nValue = point[measure.name].value;
+	    console.log(nValue)
+	    var change = fValue - nValue;
+	    var percentage = Math.round((fValue / nValue) * 100) - 100;
+	    return {change:change,
+		    percentage:percentage,
+		    up: change > 0,
+		    index : index}})}
 
+
+
+
+  render() {
+      const {config, measure , data} = this.props;
+      let CONFIG = this.props.config;
+      let firstPoint = data[0][measure.name];
+      let restPoints = data.slice(1);
+      let pos = config[`pos_is_bad`];
+      let important = this.determineRelative(measure,data);
+      console.log(important)
 
     return (
       <DataPointsWrapper
         layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
-        borderColor = {((firstPoint.value - restPoints[0].value) * (pos * 2 - 1)) < 0 ? "#02545F" : "#F3C911"}
+        borderColor = {important[0].up - pos !=0  ? "#02545F" : "#F3C911"}
       >
               <>
               <GlobalStyle backgroundColor = {config["tile_background"]} />
-              <DataPointGroup 
-                comparisonPlacement={config[`comparison_direction_${firstPoint.name}`]}
-                key={`group_${firstPoint.name}`} 
-                //next line had the this.state
-                layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
-              >
+              <DataPointGroup >
                 <DataPoint 
-                titlePlacement={config[`title_placement_${firstPoint.name}`]}
                 headerColor = {config['header_text_color']}
                 headerSize = {config['header_text_size']}
                 >
-                  {config[`show_title_${firstPoint.name}`] === false ? null : (
                     <DataPointTitle>
-                      {config[`title_overrride_${firstPoint.name}`] || firstPoint.label}
+                      {config['title_overrride'] || measure.label}
                     </DataPointTitle>
-                  )}
                   <DataPointValue 
-                    onClick={() => { this.handleClick(firstPoint, event) }}
+        onClick={() => { this.handleClick(firstPoint, event); }}
                     layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
                     color = {config['subtext_color']}
                   >
-                    {firstPoint.formattedValue}
+                    {firstPoint.rendered}
                   </DataPointValue>
                 </DataPoint>
-                {!restPoints.length > 0 ? null : (
-                  restPoints.map((point,index) => {
-                    if(!point.value){return ""}
-                    let progressPerc
-                    let percChange
-                    progressPerc = Math.round((firstPoint.value / point.value) * 100)
-                    percChange = progressPerc - 100 
+                {!important.length > 0 ? null : (
+                  important.map((point,index) => {
+                   
                     return (
                 <ComparisonDataPoint 
-                  //key = "keyOne"
                   config={config}
-                  compDataPoint={point}
-                  dataPoint={firstPoint}
-                  percChange= {percChange}
-                  progressPerc={progressPerc}
+		  change = {point.change}
+                  percChange= {point.percentage}
+		  up = {point.up}
+		  index = {point.index}
                   handleClick={this.handleClick}
+		  
                 />)}))}
               </DataPointGroup>
               </>

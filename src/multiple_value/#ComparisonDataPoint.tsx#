@@ -70,7 +70,7 @@ export const ComparisonDataPoint: React.FC<{
 	    <MyMark color={Number(up) - Number(pos)  != 0 ? 'green' : 'red'}>{
 	      [( Math.abs(percChange) < 0.5) ? "■" : (Number(up) - Number(pos)  != 0 ? "▲": "▼")]}</MyMark>
 	    <ComparisonSimpleValue>
-	      {Math.abs(percChange)}% ({tryFormatting(config[`value_format`]==""?'#,#':config.value_format,change,change.toLocaleString())}) vs. {index == 0? 'Prev. Month' : 'STPY'}
+	      {Math.abs(percChange)}% ({tryFormatting(config[`value_format`]==""?'#,#o':config.value_format,change,change.toLocaleString())}) vs. {index == 0? 'Prev. Month' : 'STPY'}
 	      </ComparisonSimpleValue>
 	  </ComparisonPercentageChange>
 	</ComparisonDataPointGroup>

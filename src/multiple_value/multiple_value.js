@@ -17,10 +17,9 @@ const DataPointsWrapper = styled.div`
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'}!important;
   align-items: center;
-  margin: 10px;
   height: 100%;
-  border-left: 15px solid #00535E;
-  border-radius: 14px;
+  border-left: 1em solid #00535E;
+  border-radius: 1em;
   justify-content: center;
 `
 
@@ -54,8 +53,8 @@ const DataPoint = styled.div`
   flex-direction: column;
   flex: 1;
   color: ${props => props.headerColor};
-  font-size: ${props => props.headerSize}em;
   width:100%;
+  font-size:18px;
   a.drillable-link {
     color: ${props => props.headerColor};
     text-decoration: none;
@@ -64,14 +63,13 @@ const DataPoint = styled.div`
 
 const DataPointTitle = styled.div`
   font-weight: bold;
-  font-size: 30px;
   margin: 5px 0;
   color: #01535E
 `
 
 const DataPointValue = styled.div`
-  font-size: 50px;
-  font-weight: bolder;
+  font-size:18px;
+   font-weight: bolder;
   :hover {
     text-decoration: underline;
   }
@@ -91,7 +89,7 @@ class MultipleValue extends React.PureComponent {
   constructor(props) {
     super(props);
 
-      this.state = {};
+    this.state = {};
     this.state.groupingLayout = 'vertical';
     this.state.fontSize = this.calculateFontSize();
   }
@@ -113,7 +111,7 @@ class MultipleValue extends React.PureComponent {
   }
 
   calculateFontSize = () => {
-    const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.02;
+    const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.04;
     return Math.round(this.getWindowSize() * multiplier);
   }
 
@@ -136,7 +134,7 @@ class MultipleValue extends React.PureComponent {
 
 
     this.setState({
-      fontSize: font_size,
+	fontSize: font_size,
       groupingLayout
     });
   }
@@ -166,26 +164,26 @@ class MultipleValue extends React.PureComponent {
       let pos = config[`pos_is_bad`];
       let important = this.determineRelative(measure,data);
       const formattedValue = tryFormatting(config.value_format,firstPoint.value,"NA");
-      console.log(firstPoint.value);
+
 
 
     return (
       <DataPointsWrapper
         layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
         font={config['grouping_font']}
-        style={{fontSize: `${this.state.fontSize}em`}}
+        style={{fontSize: '9px'}}
       >
               <>
               <GlobalStyle backgroundColor = {config["tile_background"]} />
               <DataPointGroup >
                 <DataPoint 
                 headerColor = {config['header_text_color']}
-                headerSize = {config['header_text_size']}
+        headerSize = {config['header_text_size']}
                 >
-                    <DataPointTitle>
-                      {config['title_overrride'] || measure.label}
+            <DataPointTitle>
+                      {config['title_override'] || measure.label}
                     </DataPointTitle>
-                  <DataPointValue 
+            <DataPointValue
         onClick={() => { this.handleClick(firstPoint, event); }}
                     layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
                     color = {config['subtext_color']}
@@ -197,18 +195,17 @@ class MultipleValue extends React.PureComponent {
                   important.map((point,index) => {
                    
                     return (
-                <ComparisonDataPoint 
-                  config={config}
-		  change = {point.change}
-                  percChange= {point.percentage}
-		  up = {point.up}
-		  index = {point.index}
-                  handleClick={this.handleClick}
-		  
-                />)}))}
-              </DataPointGroup>
-              </>
-   
+			    <ComparisonDataPoint
+			config={config}
+			change = {point.change}
+			percChange= {point.percentage}
+			up = {point.up}
+			index = {point.index}
+			handleClick={this.handleClick}
+			    />)}))}
+        </DataPointGroup>
+            </>
+	    
       </DataPointsWrapper>
     )
 

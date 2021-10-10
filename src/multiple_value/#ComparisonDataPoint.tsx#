@@ -62,19 +62,17 @@ function tryFormatting(formatString: string, value: number, defaultString: strin
     }
 
 export const ComparisonDataPoint: React.FC<{
-    fontSize:any,
     config: any,
     change:number,
     percChange: number,
     up:boolean,
     index:number,
     handleClick: (i: any, j: any)=>{},
-}> = ({ fontSize, config, change, percChange,up,index, handleClick }) => {
+}> = ({ config, change, percChange,up,index, handleClick }) => {
     const pos = config[`pos_is_bad`];
     var color = Number(up) - Number(pos)  != 0 ? 'green' : 'red';
     color = Math.abs(percChange) < 10 ? "#FBC834" : color;
     const formattedChange = tryFormatting(config.value_format,change,"NA");
-    console.log(fontSize);
     return (
 	<ComparisonDataPointGroup color = {config['subtext_color']}>
 	  <ComparisonPercentageChange data-value={percChange}>

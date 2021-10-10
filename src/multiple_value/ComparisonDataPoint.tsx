@@ -29,7 +29,7 @@ background: inherit`
 const ComparisonPercentageChange = styled.div`
   display: inline-block;
   padding-right: 5px;
-
+  width:100%;
   align-items:center;
   :hover {
     text-decoration: underline;
@@ -39,10 +39,20 @@ const ComparisonSimpleValue = styled.div`
   font-weight: 100;
   display: inline-block;
   padding-right: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
   :hover {
     text-decoration: underline;
   }
-`
+`;
+
+const MarkPercentHolder = styled.div`  
+  display:flex;
+  grid-column:1;`;
+
+const VsSpan = styled.div`  
+  grid-column:2;`;
 
 function tryFormatting(formatString: string, value: number, defaultString: string) {
 	try {
@@ -63,15 +73,22 @@ export const ComparisonDataPoint: React.FC<{
 }> = ({ config, change, percChange,up,index, handleClick }) => {
    
     const pos = config[`pos_is_bad`];
+    var color = Number(up) - Number(pos)  != 0 ? 'green' : 'red';
+    color = Math.abs(percChange) < 10 ? "#FBC834" : color;
+    const formattedChange = tryFormatting(config.value_format,change,"NA");
     return (
 	<ComparisonDataPointGroup color = {config['subtext_color']}>
 	  <ComparisonPercentageChange data-value={percChange}>
 	    {/* {config[`title_overrride_${dataPoint.name}`] || dataPoint.label} */}
-	    <MyMark color={Number(up) - Number(pos)  != 0 ? 'green' : 'red'}>{
-	      [( Math.abs(percChange) < 0.5) ? "■" : (Number(up) - Number(pos)  != 0 ? "▲": "▼")]}</MyMark>
 	    <ComparisonSimpleValue>
-	      {Math.abs(percChange)}% ({tryFormatting(config[`value_format`]==""?'#,#':config.value_format,change,change.toLocaleString())}) vs. {index == 0? 'Prev. Month' : 'STPY'}
-	      </ComparisonSimpleValue>
+	      <MarkPercentHolder>
+		<MyMark color={color}>
+		{( Math.abs(percChange) < 10) ? "■" : (Number(up) - Number(pos)  != 0 ? "▲": "▼")}
+	      </MyMark>
+		<span>{Math.abs(percChange)}% ({formattedChange})</span>
+	    </MarkPercentHolder>
+            <VsSpan> vs. {index == 0? 'Prev. Month' : 'STPY'}</VsSpan>
+</ComparisonSimpleValue>
 	  </ComparisonPercentageChange>
 	</ComparisonDataPointGroup>
     );

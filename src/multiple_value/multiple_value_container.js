@@ -33,7 +33,7 @@ const baseOptions = {
 	label: "Positive is bad",
 	type: 'boolean',
 	section: 'Comparison',
-	default: 'auto',
+	default: false,
 	display_size: 'normal'
     },
     tile_background : {
@@ -52,7 +52,14 @@ const baseOptions = {
 	type:'string',
 	label:` Value Format`,
         section: 'Style',
-        default: '0,0,0'}};
+	display: 'select',
+	values: [
+	    {'General' :"#,##0"},
+	    {'Thousands': '#.#,"K"'},
+	    {'Millions': '0.00,,"M"'},
+	    {'Percent':"#,##0%"}
+	],
+        default: '#.#,"K"'}};
 
 
     let currentOptions = {};
@@ -92,13 +99,13 @@ const baseOptions = {
 	    }
 	    
 	    if (measures.length > 1) {
-		this.addError({title: "Maximum number of data points", message: "This visualization does not allow more than 1 mesure to be selected"});
+		this.addError({title: "Maximum number of data points", message: "This visualisation only allows one measure"})
 		return;
 	    }
 
 	    const options = Object.assign({}, baseOptions);
 	    const measure = measures[0];
-	    console.log(measure);
+
 
 	    
 	    if (

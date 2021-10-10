@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { createGlobalStyle } from 'styled-components';
 import {formatType, lighten} from '../common';
 import { ComparisonDataPoint } from './ComparisonDataPoint';
+import SSF from "ssf";;
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -18,7 +19,7 @@ const DataPointsWrapper = styled.div`
   align-items: center;
   margin: 10px;
   height: 100%;
-  border-left: 15px solid ${props => props.borderColor};
+  border-left: 15px solid #00535E;
   border-radius: 14px;
   justify-content: center;
 `
@@ -75,14 +76,23 @@ const DataPointValue = styled.div`
     text-decoration: underline;
   }
   color: ${props => props.color}
-`
+`;
+
+
+function tryFormatting(formatString, value, defaultString) {
+    try{
+
+	return SSF.format(formatString, value);}
+    catch(err){
+	return defaultString()}
+    }
 
 class MultipleValue extends React.PureComponent {
   constructor(props) {
     super(props);
 
       this.state = {};
-    this.state.groupingLayout = 'horizontal';
+    this.state.groupingLayout = 'vertical';
     this.state.fontSize = this.calculateFontSize();
   }
 
@@ -119,7 +129,7 @@ class MultipleValue extends React.PureComponent {
 
   recalculateSizing = () => {
     const EM = 16;
-      const groupingLayout = 'horizontal';
+    const groupingLayout = 'vertical';
     let CONFIG = this.props.config;
     var font_size = (CONFIG.font_size_main != "" ? CONFIG.font_size_main : this.calculateFontSize());
     font_size = font_size / EM;
@@ -132,17 +142,12 @@ class MultipleValue extends React.PureComponent {
   }
 
     determineRelative = (measure,dataPoints) => {
-	console.log(dataPoints);
 	var first = dataPoints[0];
 	var rest = dataPoints.slice(1);
-	console.log(rest);
 	var compPoints = _.compact([rest[0]||null,rest[11]||null]);
-	console.log(compPoints);
-	console.log(measure);
 	return compPoints.map((point,index) =>  {
 	    var fValue = first[measure.name].value;
 	    var nValue = point[measure.name].value;
-	    console.log(nValue)
 	    var change = fValue - nValue;
 	    var percentage = Math.round((fValue / nValue) * 100) - 100;
 	    return {change:change,
@@ -160,14 +165,15 @@ class MultipleValue extends React.PureComponent {
       let restPoints = data.slice(1);
       let pos = config[`pos_is_bad`];
       let important = this.determineRelative(measure,data);
-      console.log(important)
+      const formattedValue = tryFormatting(config.value_format,firstPoint.value,"NA");
+      console.log(firstPoint.value);
+
 
     return (
       <DataPointsWrapper
         layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
-        borderColor = {important[0].up - pos !=0  ? "#02545F" : "#F3C911"}
       >
               <>
               <GlobalStyle backgroundColor = {config["tile_background"]} />
@@ -184,7 +190,7 @@ class MultipleValue extends React.PureComponent {
                     layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
                     color = {config['subtext_color']}
                   >
-                    {firstPoint.rendered}
+                    {formattedValue}
                   </DataPointValue>
                 </DataPoint>
                 {!important.length > 0 ? null : (

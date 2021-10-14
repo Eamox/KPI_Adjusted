@@ -86,7 +86,7 @@ export const ComparisonDataPoint: React.FC<{
 	      </MyMark>
 		<span>{Math.abs(percChange)}% ({formattedChange})</span>
 	    </MarkPercentHolder>
-            <VsSpan> vs. {index == 0? 'Prev. Month' : 'STPY'}</VsSpan>
+            <VsSpan> vs. {index == 0? 'PM' : 'STPY'}</VsSpan>
 </ComparisonSimpleValue>
 	  </ComparisonPercentageChange>
 	</ComparisonDataPointGroup>

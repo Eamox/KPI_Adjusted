@@ -38,7 +38,8 @@ const ComparisonSimpleValue = styled.div`
   display: inline-block;
   padding-right: 5px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr .5fr;
+  align-items:end;
   justify-content: space-between;
   :hover {
     text-decoration: underline;
@@ -51,6 +52,11 @@ const MarkPercentHolder = styled.div`
 
 const VsSpan = styled.div`  
   grid-column:2;`;
+
+const ActualNum = styled.div`
+font-size:13px;
+
+`
 
 function tryFormatting(formatString: string, value: number, defaultString: string) {
 	try {
@@ -84,7 +90,7 @@ export const ComparisonDataPoint: React.FC<{
 		<MyMark color={color}>
 		{( Math.abs(percChange) < 10) ? "■" : (Number(up) - Number(pos)  != 0 ? "▲": "▼")}
 	      </MyMark>
-		<span>{Math.abs(percChange)}% ({formattedChange})</span>
+		<ActualNum>{Math.abs(percChange)}% ({formattedChange})</ActualNum>
 	    </MarkPercentHolder>
             <VsSpan> vs. {index == 0? 'PM' : 'STPY'}</VsSpan>
 </ComparisonSimpleValue>

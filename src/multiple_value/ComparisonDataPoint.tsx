@@ -2,23 +2,8 @@ import React, { PureComponent, useState } from "react";
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 // @ts-ignore
-import {formatType, lighten} from '../common';
 import SSF from "ssf";
 
-const ComparisonDataPointGroup = styled.div`
-  flex: 1;
-  width: 100%;
-
-  margin: 10px 0;
-  color: ${props => props.color};
-  font-weight: 100;
-
-
-  a.drillable-link {
-    color: #a5a6a1;
-    text-decoration: none;
-  }
-`
 
 const MyMark = styled.mark `
 color:${props => props.color}
@@ -28,6 +13,7 @@ const ComparisonPercentageChange = styled.div`
   display: inline-block;
   padding-right: 5px;
   width:100%;
+  grid-area:Comparison${props => props.color};
   align-items:center;
   :hover {
     text-decoration: underline;
@@ -58,6 +44,7 @@ font-size:13px;
 
 `
 
+
 function tryFormatting(formatString: string, value: number, defaultString: string) {
 	try {
 	    return SSF.format(formatString, value);
@@ -80,10 +67,8 @@ export const ComparisonDataPoint: React.FC<{
     var color = Number(up) - Number(pos)  != 0 ? 'green' : 'red';
     color = Math.abs(percChange) < 10 ? "#FBC834" : color;
     const formattedChange = tryFormatting(config.value_format,change,"NA");
-    console.log(fontSize);
     return (
-	<ComparisonDataPointGroup color = {config['subtext_color']}>
-	  <ComparisonPercentageChange data-value={percChange}>
+	    <ComparisonPercentageChange color={String(index + 1)}>
 	    {/* {config[`title_overrride_${dataPoint.name}`] || dataPoint.label} */}
 	    <ComparisonSimpleValue>
 	      <MarkPercentHolder>
@@ -95,6 +80,5 @@ export const ComparisonDataPoint: React.FC<{
             <VsSpan> vs. {index == 0? 'PM' : 'STPY'}</VsSpan>
 </ComparisonSimpleValue>
 	  </ComparisonPercentageChange>
-	</ComparisonDataPointGroup>
     );
 }

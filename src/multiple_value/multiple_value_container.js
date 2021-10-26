@@ -91,7 +91,7 @@ const baseOptions = {
 	    if (measures.length == 0) {
 		this.addError({title: "No Measures", message: "This chart requires measures"});
 		return;
-	    }
+	    };
 	    
 	    if (queryResponse.fields.pivots.length) {
 		this.addError({title: "Pivoting not allowed", message: "This visualization does not allow pivoting"});

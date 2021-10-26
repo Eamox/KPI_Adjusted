@@ -18,6 +18,7 @@ const DataPointsWrapper = styled.div`
   grid-template-columns: 0.1fr 1.4fr;
   grid-template-rows: 1.6fr 1.1fr 0.65fr 0.65fr;
   grid-template-areas: "Border Heading" "Border KPI" "Border Comparison1" "Border Comparison2";
+  gap: 0 5px;
 `
 
 const dataPointGroupDirectionDict = {

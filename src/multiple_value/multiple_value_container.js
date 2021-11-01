@@ -85,7 +85,7 @@ const baseOptions = {
 	
 	updateAsync: function(data, element, config, queryResponse, details, done) {
 	    this.clearErrors();
-
+	    console.log(element, queryResponse,details)
 	    const measures = queryResponse.fields.measures;
 	    
 	    if (measures.length == 0) {

@@ -54,10 +54,12 @@ const baseOptions = {
         section: 'Style',
 	display: 'select',
 	values: [
-	    {'General' :"#,##0"},
+	    {'Decimal' :"#.00"},
+	    {'General' :'General'},
 	    {'Thousands': '#.#,"K"'},
 	    {'Millions': '0.00,,"M"'},
-	    {'Percent':"#,##0%"}
+	    {'Percent':"#,##0%"},
+	    {'Time':'[mm]:ss'}
 	],
         default: '#.#,"K"'}};
 

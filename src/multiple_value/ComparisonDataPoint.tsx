@@ -66,18 +66,34 @@ export const ComparisonDataPoint: React.FC<{
     const pos = config[`pos_is_bad`];
     var color = Number(up) - Number(pos)  != 0 ? 'green' : 'red';
     color = Math.abs(percChange) < 10 ? "#FBC834" : color;
-    const formattedChange = tryFormatting(config.value_format,change,"NA");
+    var format;
+   
+    if(config.value_format == "General"){
+        if(Math.abs(change) > 1000000) {
+            format = '#,##0.0,,"M"';
+        }
+        else if (Math.abs(change) > 1000){
+            format =  '#,##0.0,"K"';
+        }
+        else{
+            format = "General";
+        }
+    }
+    else{
+        format = config.value_format;
+    }
+     const formattedChange = tryFormatting(format,change,"NA");
     return (
 	    <ComparisonPercentageChange color={String(index + 1)}>
 	    {/* {config[`title_overrride_${dataPoint.name}`] || dataPoint.label} */}
 	    <ComparisonSimpleValue>
 	      <MarkPercentHolder>
 		<MyMark color={color}>
-		{( Math.abs(percChange) < 10) ? "■" : (Number(up) - Number(pos)  != 0 ? "▲": "▼")}
+		{( Math.abs(percChange) < 10) ? "■" : (Number(up) ? "▲": "▼")}
 	      </MyMark>
 		<ActualNum>{Math.abs(percChange)}% ({formattedChange})</ActualNum>
 	    </MarkPercentHolder>
-            <VsSpan> vs. {index == 0? 'PQ' : 'STPY'}</VsSpan>
+            <VsSpan> vs. {index == 0? 'PP' : 'STPY'}</VsSpan>
 </ComparisonSimpleValue>
 	  </ComparisonPercentageChange>
     );

@@ -118,8 +118,7 @@ class MultipleValue extends React.PureComponent {
 
     determineRelative = (measure,dataPoints) => {
 	var first = dataPoints[0];
-	var rest = dataPoints.slice(1);
-	var compPoints = _.compact([rest[0]||null,rest[3]||null]);
+	var compPoints = dataPoints.slice(1);
 	return compPoints.map((point,index) =>  {
 	    var fValue = first[measure.name].value;
 	    var nValue = point[measure.name].value;
@@ -140,9 +139,22 @@ class MultipleValue extends React.PureComponent {
 	let restPoints = data.slice(1);
 	let pos = config[`pos_is_bad`];
 	let important = this.determineRelative(measure,data);
-	const formattedValue = tryFormatting(config.value_format,firstPoint.value,"NA");
-	console.log(this.props);
-
+	var format;
+    if(config.value_format == "General"){
+        if(Math.abs(firstPoint.value) > 1000000) {
+	    format = '#,##0.0,,"M"';
+        }
+        else if (Math.abs(firstPoint.value) > 1000){
+            format =  '#,##0.0,"K"';
+        }
+        else{
+            format = "General";
+        }
+    }
+    else{
+        format = config.value_format;
+    }
+	const formattedValue = tryFormatting(format,firstPoint.value,"NA");
 
 
 	return (

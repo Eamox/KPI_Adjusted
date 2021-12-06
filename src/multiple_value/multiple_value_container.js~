@@ -100,14 +100,13 @@ const baseOptions = {
 		return;
 	    }
 	    
-	    if (measures.length > 2) {
-		this.addError({title: "Maximum number of data points", message: "This visualisation only allows one measure and one comparison"});
+	    if (measures.length > 1) {
+		this.addError({title: "Maximum number of data points", message: "This visualisation only allows one measure"})
 		return;
 	    }
 
 	    const options = Object.assign({}, baseOptions);
 	    const measure = measures[0];
-	    const target = measures[1] || false;
 
 
 	    
@@ -123,8 +122,7 @@ const baseOptions = {
 	    this.chart = ReactDOM.render(
 		<MultipleValue
 		  config={config}
-		measure = {measure}
-		target = {target}
+		  measure = {measure}
 		  data={data}
 		  />,
 		element

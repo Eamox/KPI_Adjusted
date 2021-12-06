@@ -33,22 +33,18 @@ const DataPointTitle = styled.div`
   margin: 5px 0;
   color: #01535E;
   grid-area: Heading;
-  font-size: 18px;
+  font-size: 16px;
 `
 
 const DataPointValue = styled.div`
   font-size:18px;
-  font-weight: light;
+  font-weight: bolder;
   grid-area:KPI;
   :hover {
     text-decoration: underline;
-  };
-  color: ${props => props.color};`; 
-
-
-const DataPointMain = styled.div`font-weight:bolder`;
-
-const DataPointTarget = styled.div`font-size:16px`;
+  }
+  color: ${props => props.color}
+`;
 
 const Border = styled.div`
 height:100%;
@@ -137,16 +133,13 @@ class MultipleValue extends React.PureComponent {
 
 
     render() {
-	const {config, measure ,target,  data} = this.props;
+	const {config, measure , data} = this.props;
 	let CONFIG = this.props.config;
 	let firstPoint = data[0][measure.name];
-	let firstTarget = data[0][target.name]|| "";
 	let restPoints = data.slice(1);
 	let pos = config[`pos_is_bad`];
 	let important = this.determineRelative(measure,data);
 	var format;
-
-
     if(config.value_format == "General"){
         if(Math.abs(firstPoint.value) > 1000000) {
 	    format = '#,##0.0,,"M"';
@@ -180,10 +173,10 @@ class MultipleValue extends React.PureComponent {
             layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
             color = {config['subtext_color']}
                 >
-		<DataPointMain>{formattedValue}</DataPointMain><DataPointTarget>{firstTarget?` ${tryFormatting(format,firstTarget.value,"")} (target)`:""}</DataPointTarget>
+                {formattedValue}
             </DataPointValue>
                 {!important.length > 0 ? null : (
-                    important.map((point,index) => { 
+                    important.map((point,index) => {
 			
 			return (
 				<ComparisonDataPoint

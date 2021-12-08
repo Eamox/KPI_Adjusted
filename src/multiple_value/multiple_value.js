@@ -166,7 +166,6 @@ class MultipleValue extends React.PureComponent {
     else{
         format = config.value_format;
     }
-	const formattedValue = tryFormatting(format,firstPoint.value,"NA");
 
 
 	return (
@@ -185,7 +184,7 @@ class MultipleValue extends React.PureComponent {
             layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
             color = {config['subtext_color']}
                 >
-		<DataPointMain>{formattedValue}</DataPointMain>
+		<DataPointMain>{tryFormatting(format,firstPoint.value,"")}</DataPointMain>
 		{!firstTarget?null:(
 		    <>
 		     

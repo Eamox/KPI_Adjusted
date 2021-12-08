@@ -43,12 +43,17 @@ const DataPointValue = styled.div`
   :hover {
     text-decoration: underline;
   };
-  color: ${props => props.color};`; 
+  color: ${props => props.color};
+  display: grid;
+  grid-template-columns: 1fr 0.5fr`; 
 
 
 const DataPointMain = styled.div`font-weight:bolder`;
 
 const DataPointTarget = styled.div`font-size:16px`;
+
+const DataPointArrow = styled.span `
+color: ${props => props.color} `;
 
 const Border = styled.div`
 height:100%;
@@ -180,8 +185,15 @@ class MultipleValue extends React.PureComponent {
             layout={config['orientation'] === 'auto' ? this.state.groupingLayout : config['orientation']}
             color = {config['subtext_color']}
                 >
-		<DataPointMain>{formattedValue}</DataPointMain><DataPointTarget>{firstTarget?` ${tryFormatting(format,firstTarget.value,"")} (target)`:""}</DataPointTarget>
-            </DataPointValue>
+		<DataPointMain>{formattedValue}</DataPointMain>
+		{!firstTarget?null:(
+		    <>
+		     
+			<DataPointTarget> <DataPointArrow color={firstPoint.value > firstTarget.value ? "green" : "red"}>{firstPoint.value > firstTarget.value ? "▲": "▼"}</DataPointArrow>
+			{tryFormatting("#%",Math.abs((firstPoint.value/firstTarget.value - 1)),"")} ({tryFormatting(format,firstTarget.value,"")} FY Target)
+		    </DataPointTarget>
+		</>)}
+		    </DataPointValue>
                 {!important.length > 0 ? null : (
                     important.map((point,index) => { 
 			

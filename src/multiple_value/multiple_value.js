@@ -44,13 +44,13 @@ const DataPointValue = styled.div`
     text-decoration: underline;
   };
   color: ${props => props.color};
-  display: grid;
+
   grid-template-columns: 1fr 0.5fr`; 
 
 
 const DataPointMain = styled.div`font-weight:bolder`;
 
-const DataPointTarget = styled.div`font-size:16px`;
+const DataPointTarget = styled.div`font-size:12px`;
 
 const DataPointArrow = styled.span `
 color: ${props => props.color} `;
